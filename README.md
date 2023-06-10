@@ -1,4 +1,4 @@
-### dependency
+# dependency
 ---
 - structlog==21.2.0 (2021г.)
 - aiologger==0.7.0
@@ -17,7 +17,7 @@ aiologger -> asyncloggerGraylogHandler : aiologger.Handler
 ```
 # How to use?
 
-#### Setting variables
+### Setting variables
 ```.env```
 ```
 LOGGER_CONSOLE=True  # Enable console output
