@@ -1,6 +1,6 @@
 # dependency
 ---
-- structlog==21.2.0 (2021г.)
+- structlog==21.2.0
 - aiologger==0.7.0
 - graypy==2.1.0
 
