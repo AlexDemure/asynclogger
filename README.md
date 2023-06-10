@@ -9,10 +9,10 @@
 ```
 @startuml
 Client -> structlog : logger.debug(Message)
-structlog -> medsi_Adapter : structlog.BoundLogger._proxy_to_logger()
-medsi_Adapter -> aiologger : aiologger.debug()
-aiologger -> medsi_ConsoleHandler : aiologger.AsyncStreamHandler
-aiologger -> medsi_GraylogHandler : aiologger.Handler
+structlog -> asynclogger.Adapter : structlog.BoundLogger._proxy_to_logger()
+asynclogger.Adapter -> aiologger : aiologger.debug()
+aiologger -> asynclogger.ConsoleHandler : aiologger.AsyncStreamHandler
+aiologger -> asyncloggerGraylogHandler : aiologger.Handler
 @enduml
 ```
 # How to use?
@@ -31,12 +31,12 @@ LOGGER_GRAYLOG_PORT=12201
 
 ### Connecting in project
 ```
-from medsi_logging.logger import add_handler
-from medsi_logging.logger import console_handler
-from medsi_logging.logger import get_logger
-from medsi_logging.logger import graylog_handler
+from asynclogger import add_handler
+from asynclogger import console_handler
+from asynclogger import get_logger
+from asynclogger import graylog_handler
 
-from app.core import config
+from ... import config
 
 if config.LOGGER_CONSOLE:
     add_handler(console_handler(level=config.LOGGER_CONSOLE_LEVEL))
@@ -60,7 +60,7 @@ await logger.debug("Debug")
 ### feature ```Field```
 
 ```
-from medsi_logging.fields import Field
+from asynclogger.fields import Field
 
 logger = get_logger()
 
@@ -70,7 +70,7 @@ await logger.debug("Debug", Field.levelname("DEBUG"))
 ### Displaying specific fields
 
 ```
-from medsi_logging.fields import Field
+from asynclogger.fields import Field
 
 add_handler(
         console_handler(
@@ -89,7 +89,7 @@ await logger.debug("Debug", include="Include Field", other="Other")
 
 #### Priority override
 ```
-from medsi_logging.fields import FIELDS_SETTINGS
+from asynclogger.fields import FIELDS_SETTINGS, Field
 
 await logger.debug("Debug")
  >>> 2023-06-09T08:42:14.447572 DEBUG: Debug
@@ -103,7 +103,7 @@ await logger.debug("Debug")
 
 #### Format override
 ```
-from medsi_logging.fields import FIELDS_SETTINGS
+from asynclogger.fields import FIELDS_SETTINGS, Field
 
 await logger.debug("Debug")
  >>> 2023-06-09T08:42:14.447572 DEBUG: Debug
