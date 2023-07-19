@@ -36,7 +36,7 @@ class ConsoleHandler(_AsyncStreamHandler):
         self.fields = fields
 
     def make_log(self, copy: LogRecord) -> str:
-        """Генерирование строки для вывода в консоль."""
+        """Generating a string for output to the console."""
 
         context: dict = copy.msg
 
@@ -46,13 +46,15 @@ class ConsoleHandler(_AsyncStreamHandler):
         fields = list()
 
         for key, value in context.items():
-            settings = FIELDS_SETTINGS.get(key, FIELDS_SETTINGS["kwarg"])  # Получаем настройки по каждому ключу
+            settings = FIELDS_SETTINGS.get(key, FIELDS_SETTINGS["kwarg"])  # Getting settings for each key
 
             fields.append(dict(priority=settings["priority"], string=settings["template"](copy.levelname, key, value)))
 
-        fields.sort(key=lambda item: item["priority"])  # Сортируем объекты по приоритету
+        fields.sort(key=lambda item: item["priority"])  # Sort objects by priority
 
-        return f"{structlog.dev.RESET_ALL}\u0020".join(item["string"] for item in fields)  # Формируем строку
+        log = f"{structlog.dev.RESET_ALL}\u0020".join(item["string"] for item in fields)  # Forming log
+
+        return f"{structlog.dev.RESET_ALL}{log}{structlog.dev.RESET_ALL}"  # Clear formatting
 
     async def handle(self, record: LogRecord) -> bool:
         """
