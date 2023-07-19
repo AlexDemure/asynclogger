@@ -16,7 +16,7 @@ async def _ignore():
 class BoundLoggerAdapter(BoundLogger):
     """Adapter for structlog и aiologger."""
 
-    def _proxy_to_logger(self, method: str, event: Optional[str] = None, *args, **kwargs) -> Any:  # noqa:C901
+    def _proxy_to_logger(self, method_name: str, event: Optional[str] = None, *args, **kwargs) -> Any:  # noqa:C901
         """
         Override parent method BoundLogger._proxy_to_logger
 
@@ -30,7 +30,7 @@ class BoundLoggerAdapter(BoundLogger):
             kwargs[Field.timestamp] = datetime.utcnow().isoformat()  # Add timestamp
 
         if not kwargs.get(Field.levelname, None):
-            kwargs[Field.levelname] = method.upper()
+            kwargs[Field.levelname] = method_name.upper()
 
         positional_args = list()
 
@@ -46,7 +46,7 @@ class BoundLoggerAdapter(BoundLogger):
             kwargs["positional_args"] = positional_args
 
         try:
-            _, kw = self._process_event(method_name=method, event=event, event_kw=kwargs)
-            return getattr(self._logger, method)(msg=kw)
+            _, kw = self._process_event(method_name=method_name, event=event, event_kw=kwargs)
+            return getattr(self._logger, method_name)(msg=kw)
         except Exception:
             return _ignore()
